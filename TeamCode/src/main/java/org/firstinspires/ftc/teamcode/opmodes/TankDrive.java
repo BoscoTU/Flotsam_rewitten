@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
+@TeleOp(name="Tank Drive TeleOp", group="zoidProgram")
 public class TankDrive extends OpMode {
     private DcMotor leftMotor;
     private DcMotor rightMotor;
+    private Servo servo;
     @Override
     public void init() {
         leftMotor = hardwareMap.get(DcMotor.class, "motorLeft");
@@ -15,6 +19,9 @@ public class TankDrive extends OpMode {
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        servo = hardwareMap.get(Servo.class, "servo");
+        servo.setPosition(0);
     }
 
     @Override
@@ -23,6 +30,14 @@ public class TankDrive extends OpMode {
         double turn = gamepad1.right_stick_x;
 
         drive(drive, turn);
+
+        if (gamepad1.a) {
+            servo.setPosition(1);
+        } else if (gamepad1.b) {
+            servo.setPosition(0);
+        }
+        telemetry.addData("servo Pos", servo.getPosition());
+        telemetry.update();
     }
 
     @Override
