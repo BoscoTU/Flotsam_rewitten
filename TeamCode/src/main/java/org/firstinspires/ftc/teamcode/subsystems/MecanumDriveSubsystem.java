@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -8,6 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumDriveSubsystem extends SubsystemBase {
@@ -20,34 +28,43 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     private OpMode opMode;
 
     private boolean isFieldCentric;
+    private final boolean IS_USING_RR = false;
+
+    private MecanumDrive mecanumDrive;
+    private Pose2d currentPose;
+
+    private final double TOLERANCE = 1.0;
     public MecanumDriveSubsystem(OpMode opMode) {
         this.opMode = opMode;
         HardwareMap hardwareMap = opMode.hardwareMap;
 
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        rearLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        rearRightMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        if (!IS_USING_RR) {
+            frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+            rearLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+            frontRightMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+            rearRightMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
 
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rearLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rearRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rearLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rearRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        rearLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rearRightMotor.setDirection(DcMotor.Direction.FORWARD);
+            frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+            frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
+            rearLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+            rearRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        // Retrieve the IMU from the hardware map
-        imu = hardwareMap.get(IMU.class, "imu");
-        // Adjust the orientation parameters to match your robot
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-        imu.initialize(parameters);
+            // Retrieve the IMU from the hardware map
+            imu = hardwareMap.get(IMU.class, "imu");
+            // Adjust the orientation parameters to match your robot
+            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                    RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                    RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+            // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
+            imu.initialize(parameters);
+        }
 
+        mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         isFieldCentric = true;
     }
 
@@ -59,25 +76,40 @@ public class MecanumDriveSubsystem extends SubsystemBase {
             double rotX = strafe * Math.cos(-botHeading) - drive * Math.sin(-botHeading);
             double rotY = strafe * Math.sin(-botHeading) + drive * Math.cos(-botHeading);
 
-            double frontLeftPower  = Range.clip(rotY + rotX + turn, -1, 1);
-            double frontRightPower = Range.clip(rotY - rotX - turn, -1, 1);
-            double rearLeftPower   = Range.clip(rotY - rotX + turn, -1, 1);
-            double rearRightPower  = Range.clip(rotY + rotX - turn, -1, 1);
-            
-            frontLeftMotor.setPower(frontLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            rearLeftMotor.setPower(rearLeftPower);
-            rearRightMotor.setPower(rearRightPower);
+            if (!IS_USING_RR) {
+                double frontLeftPower  = Range.clip(rotY + rotX + turn, -1, 1);
+                double frontRightPower = Range.clip(rotY - rotX - turn, -1, 1);
+                double rearLeftPower   = Range.clip(rotY - rotX + turn, -1, 1);
+                double rearRightPower  = Range.clip(rotY + rotX - turn, -1, 1);
+
+                frontLeftMotor.setPower(frontLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                rearLeftMotor.setPower(rearLeftPower);
+                rearRightMotor.setPower(rearRightPower);
+            } else {
+                mecanumDrive.setDrivePowers(
+                        new PoseVelocity2d(
+                                new Vector2d(rotX, rotY), turn
+                        ));
+            }
+
         } else {
-            double frontLeftPower  = Range.clip(drive + strafe + turn, -1, 1);
-            double frontRightPower = Range.clip(drive - strafe - turn, -1, 1);
-            double rearLeftPower   = Range.clip(drive - strafe + turn, -1, 1);
-            double rearRightPower  = Range.clip(drive + strafe - turn, -1, 1);
-            
-            frontLeftMotor.setPower(frontLeftPower);
-            frontRightMotor.setPower(frontRightPower);
-            rearLeftMotor.setPower(rearLeftPower);
-            rearRightMotor.setPower(rearRightPower);
+            if (!IS_USING_RR) {
+                double frontLeftPower  = Range.clip(drive + strafe + turn, -1, 1);
+                double frontRightPower = Range.clip(drive - strafe - turn, -1, 1);
+                double rearLeftPower   = Range.clip(drive - strafe + turn, -1, 1);
+                double rearRightPower  = Range.clip(drive + strafe - turn, -1, 1);
+
+                frontLeftMotor.setPower(frontLeftPower);
+                frontRightMotor.setPower(frontRightPower);
+                rearLeftMotor.setPower(rearLeftPower);
+                rearRightMotor.setPower(rearRightPower);
+            } else {
+                mecanumDrive.setDrivePowers(
+                        new PoseVelocity2d(
+                                new Vector2d(strafe, drive), turn
+                        ));
+            }
         }
     }
 
@@ -93,10 +125,34 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     public void switchFieldCentric() {
         isFieldCentric = !isFieldCentric;
     }
+
+    public Pose2d getCurrentPos() {
+        return mecanumDrive.localizer.getPose();
+    }
     
     @Override
     public void periodic() {
         opMode.telemetry.addData("heading", getHeading());
         opMode.telemetry.addData("is fieldCentric", isFieldCentric);
+        mecanumDrive.updatePoseEstimate();
+        currentPose = mecanumDrive.localizer.getPose();
     }
+
+    public class ToBasket implements Action {
+        private boolean cancelled = false;
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if((Math.abs(currentPose.position.x) <= TOLERANCE && Math.abs(currentPose.position.y) <= TOLERANCE && Math.abs(currentPose.heading.real) <= TOLERANCE && Math.abs(currentPose.heading.imag) <= TOLERANCE) || cancelled) {
+                return false;
+            } else {
+                return mecanumDrive.actionBuilder(currentPose).
+                        strafeToLinearHeading(new Vector2d(0, 0), Math.toRadians(0))
+                        .build().run(telemetryPacket);
+            }
+        }
+
+        public void cancelAbruptly() {cancelled = true;}
+    }
+
+    public ToBasket toBasket() {return new ToBasket();}
 }
