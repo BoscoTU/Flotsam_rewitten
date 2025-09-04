@@ -30,7 +30,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     private boolean isFieldCentric;
     private final boolean IS_USING_RR = false;
 
-    private MecanumDrive mecanumDrive;
+    public MecanumDrive mecanumDrive;
     private Pose2d currentPose;
 
     private final double TOLERANCE = 1.0;
