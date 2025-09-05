@@ -22,9 +22,9 @@ public class TankDriveSubsystem extends SubsystemBase {
         HardwareMap hardwareMap = opMode.hardwareMap;
 
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        rearLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        rearRightMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        rearLeftMotor = hardwareMap.get(DcMotor.class, "rearLeftMotor");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        rearRightMotor = hardwareMap.get(DcMotor.class, "rearRightMotor");
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

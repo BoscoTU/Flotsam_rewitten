@@ -12,16 +12,16 @@ public class TankDrive extends OpMode {
     private Servo servo;
     @Override
     public void init() {
-        leftMotor = hardwareMap.get(DcMotor.class, "motorLeft");
-        rightMotor = hardwareMap.get(DcMotor.class, "motorRight");
+        leftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        rightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        servo = hardwareMap.get(Servo.class, "servo");
-        servo.setPosition(0);
+//        servo = hardwareMap.get(Servo.class, "servo");
+//        servo.setPosition(0);
     }
 
     @Override
@@ -31,11 +31,11 @@ public class TankDrive extends OpMode {
 
         drive(drive, turn);
 
-        if (gamepad1.a) {
-            servo.setPosition(1);
-        } else if (gamepad1.b) {
-            servo.setPosition(0);
-        }
+//        if (gamepad1.a) {
+//            servo.setPosition(1);
+//        } else if (gamepad1.b) {
+//            servo.setPosition(0);
+//        }
         telemetry.addData("servo Pos", servo.getPosition());
         telemetry.update();
     }
