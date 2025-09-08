@@ -34,6 +34,11 @@ public class ClassicTeleOp extends OpMode {
          if (gamepad1.a) {
              mecanumDriveSubsystem.switchFieldCentric();
          }
+         if (gamepad1.right_bumper) {
+             mecanumDriveSubsystem.changeSpeedMultiplier(0.5);
+         } else {
+             mecanumDriveSubsystem.changeSpeedMultiplier(1.0);
+         }
     }
 
     @Override

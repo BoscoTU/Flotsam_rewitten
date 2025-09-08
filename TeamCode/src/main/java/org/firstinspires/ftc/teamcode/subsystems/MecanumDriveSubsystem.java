@@ -29,8 +29,9 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
     private boolean isFieldCentric;
     private final boolean IS_USING_RR = false;
+    private double speedMultiplier = 1.0;
 
-//    public MecanumDrive mecanumDrive;
+    public MecanumDrive mecanumDrive;
     private Pose2d currentPose;
 
     private final double TOLERANCE = 1.0;
@@ -62,9 +63,9 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                     RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
             // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
             imu.initialize(parameters);
+        } else {
+            mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         }
-
-//        mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         isFieldCentric = true;
     }
 
@@ -86,12 +87,12 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                 frontRightMotor.setPower(frontRightPower);
                 rearLeftMotor.setPower(rearLeftPower);
                 rearRightMotor.setPower(rearRightPower);
-//            } else {
-//                mecanumDrive.setDrivePowers(
-//                        new PoseVelocity2d(
-//                                new Vector2d(rotX, rotY), turn
-//                        ));
-//            }
+           } else {
+               mecanumDrive.setDrivePowers(
+                       new PoseVelocity2d(
+                               new Vector2d(rotX, rotY), turn
+                       ));
+           }
 
         } else {
             if (!IS_USING_RR) {
@@ -104,14 +105,14 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                 frontRightMotor.setPower(frontRightPower);
                 rearLeftMotor.setPower(rearLeftPower);
                 rearRightMotor.setPower(rearRightPower);
-//            } else {
-//                mecanumDrive.setDrivePowers(
-//                        new PoseVelocity2d(
-//                                new Vector2d(strafe, drive), turn
-//                        ));
+           } else {
+               mecanumDrive.setDrivePowers(
+                       new PoseVelocity2d(
+                               new Vector2d(strafe, drive), turn
+                       ));
             }
         }
-    }}
+    }
 
     public void resetImu() {
         imu.resetYaw();
@@ -126,33 +127,37 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         isFieldCentric = !isFieldCentric;
     }
 
-//    public Pose2d getCurrentPos() {
-//        return mecanumDrive.localizer.getPose();
-//    }
-//
-//    @Override
-//    public void periodic() {
-//        opMode.telemetry.addData("heading", getHeading());
-//        opMode.telemetry.addData("is fieldCentric", isFieldCentric);
-//        mecanumDrive.updatePoseEstimate();
-//        currentPose = mecanumDrive.localizer.getPose();
-//    }
-//
-//    public class ToBasket implements Action {
-//        private boolean cancelled = false;
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-//            if((Math.abs(currentPose.position.x) <= TOLERANCE && Math.abs(currentPose.position.y) <= TOLERANCE && Math.abs(currentPose.heading.real) <= TOLERANCE && Math.abs(currentPose.heading.imag) <= TOLERANCE) || cancelled) {
-//                return false;
-//            } else {
-//                return mecanumDrive.actionBuilder(currentPose).
-//                        strafeToLinearHeading(new Vector2d(0, 0), Math.toRadians(0))
-//                        .build().run(telemetryPacket);
-//            }
-//        }
-//
-//        public void cancelAbruptly() {cancelled = true;}
-//    }
-//
-//    public ToBasket toBasket() {return new ToBasket();}
+    public void changeSpeedMultiplier(double speedMultiplier) {
+        this.speedMultiplier = Range.clip(speedMultiplier, 0, 1);
+    }
+
+   public Pose2d getCurrentPos() {
+       return mecanumDrive.localizer.getPose();
+   }
+
+   @Override
+   public void periodic() {
+       opMode.telemetry.addData("heading", getHeading());
+       opMode.telemetry.addData("is fieldCentric", isFieldCentric);
+       mecanumDrive.updatePoseEstimate();
+       currentPose = mecanumDrive.localizer.getPose();
+   }
+
+   public class ToBasket implements Action {
+       private boolean cancelled = false;
+       @Override
+       public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+           if((Math.abs(currentPose.position.x) <= TOLERANCE && Math.abs(currentPose.position.y) <= TOLERANCE && Math.abs(currentPose.heading.real) <= TOLERANCE && Math.abs(currentPose.heading.imag) <= TOLERANCE) || cancelled) {
+               return false;
+           } else {
+               return mecanumDrive.actionBuilder(currentPose).
+                       strafeToLinearHeading(new Vector2d(0, 0), Math.toRadians(0))
+                       .build().run(telemetryPacket);
+           }
+       }
+
+       public void cancelAbruptly() {cancelled = true;}
+   }
+
+   public ToBasket toBasket() {return new ToBasket();}
 }
