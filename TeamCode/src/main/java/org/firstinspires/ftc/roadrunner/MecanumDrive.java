@@ -56,8 +56,8 @@ public final class MecanumDrive {
 
     public static class Params {
         public String FRONT_LEFT_MOTOR_NAME = "frontLeftMotor";
-        public String REAR_LEFT_MOTOR_NAME = "frontRightMotor";
-        public String FRONT_RIGHT_MOTOR_NAME = "rearLeftMotor";
+        public String REAR_LEFT_MOTOR_NAME = "rearLeftMotor";
+        public String FRONT_RIGHT_MOTOR_NAME = "frontRightMotor";
         public String REAR_RIGHT_MOTOR_NAME = "rearRightMotor";
 
         public DcMotorSimple.Direction FRONT_LEFT_MOTOR_DRIECTION = DcMotor.Direction.REVERSE;

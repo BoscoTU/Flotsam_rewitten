@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.TankDriveSubsystem;
 
 @TeleOp(name="TeleOp", group="zoidProgram")
 public class ClassicTeleOp extends OpMode {
@@ -13,7 +12,7 @@ public class ClassicTeleOp extends OpMode {
     @Override
     public void init() {
 //        tankDriveSubsystem = new TankDriveSubsystem(this);
-        mecanumDriveSubsystem = new MecanumDriveSubsystem(this);
+        mecanumDriveSubsystem = new MecanumDriveSubsystem(this, true);
     }
 
     @Override

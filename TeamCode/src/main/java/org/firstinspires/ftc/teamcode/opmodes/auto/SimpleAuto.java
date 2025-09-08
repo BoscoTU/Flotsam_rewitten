@@ -17,7 +17,7 @@ public class SimpleAuto extends LinearOpMode {
     @Override
     public void runOpMode()  {
 
-        mecanumDriveSubsystem = new MecanumDriveSubsystem(this);
+        mecanumDriveSubsystem = new MecanumDriveSubsystem(this, true);
 
         waitForStart();
 

@@ -5,8 +5,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -32,7 +30,7 @@ public class RRTeleOp extends OpMode {
    private ControlStates controlState;
    @Override
    public void init() {
-       this.driveSubsystem = new MecanumDriveSubsystem(this);
+       this.driveSubsystem = new MecanumDriveSubsystem(this, true);
        timer = new ElapsedTime();
        controlState = ControlStates.DRIVER_CONTROL;
    }

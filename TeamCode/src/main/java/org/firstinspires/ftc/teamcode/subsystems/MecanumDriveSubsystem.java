@@ -28,22 +28,23 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     private OpMode opMode;
 
     private boolean isFieldCentric;
-    private final boolean IS_USING_RR = false;
+    private boolean IS_USING_RR = false;
     private double speedMultiplier = 1.0;
 
     public MecanumDrive mecanumDrive;
     private Pose2d currentPose;
 
     private final double TOLERANCE = 1.0;
-    public MecanumDriveSubsystem(OpMode opMode) {
+    public MecanumDriveSubsystem(OpMode opMode, boolean isUsingRR) {
         this.opMode = opMode;
         HardwareMap hardwareMap = opMode.hardwareMap;
 
+        IS_USING_RR = isUsingRR;
         if (!IS_USING_RR) {
             frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
             rearLeftMotor = hardwareMap.get(DcMotor.class, "rearLeftMotor");
             frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
-            rearRightMotor = hardwareMap.get(DcMotor.class, "rearLeftMotor");
+            rearRightMotor = hardwareMap.get(DcMotor.class, "rearRightMotor");
 
             frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -55,17 +56,18 @@ public class MecanumDriveSubsystem extends SubsystemBase {
             rearLeftMotor.setDirection(DcMotor.Direction.REVERSE);
             rearRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
-            // Retrieve the IMU from the hardware map
-            imu = hardwareMap.get(IMU.class, "imu");
-            // Adjust the orientation parameters to match your robot
-            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                    RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                    RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-            // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-            imu.initialize(parameters);
         } else {
             mecanumDrive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         }
+        // Retrieve the IMU from the hardware map
+        imu = hardwareMap.get(IMU.class, "imu");
+        // Adjust the orientation parameters to match your robot
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
+        imu.initialize(parameters);
+
         isFieldCentric = true;
     }
 
@@ -139,8 +141,10 @@ public class MecanumDriveSubsystem extends SubsystemBase {
    public void periodic() {
        opMode.telemetry.addData("heading", getHeading());
        opMode.telemetry.addData("is fieldCentric", isFieldCentric);
-       mecanumDrive.updatePoseEstimate();
-       currentPose = mecanumDrive.localizer.getPose();
+       if (IS_USING_RR) {
+           mecanumDrive.updatePoseEstimate();
+           currentPose = mecanumDrive.localizer.getPose();
+       }
    }
 
    public class ToBasket implements Action {
