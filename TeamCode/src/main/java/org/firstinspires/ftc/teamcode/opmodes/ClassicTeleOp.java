@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 public class ClassicTeleOp extends OpMode {
 //    TankDriveSubsystem tankDriveSubsystem;
      MecanumDriveSubsystem mecanumDriveSubsystem;
+     boolean buttonALastPressed = false;
     @Override
     public void init() {
 //        tankDriveSubsystem = new TankDriveSubsystem(this);
@@ -28,11 +30,16 @@ public class ClassicTeleOp extends OpMode {
          mecanumDriveSubsystem.periodic();
          telemetry.update();
 
-         if (gamepad1.options) {
+         if (gamepad1.back) {
              mecanumDriveSubsystem.resetImu();
          }
-         if (gamepad1.a) {
+         if (gamepad1.a && !buttonALastPressed) {
              mecanumDriveSubsystem.switchFieldCentric();
+             buttonALastPressed = true;
+         } else if (gamepad1.a) {
+             buttonALastPressed = true;
+         } else {
+             buttonALastPressed = false;
          }
          if (gamepad1.right_bumper) {
              mecanumDriveSubsystem.changeSpeedMultiplier(0.5);

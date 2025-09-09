@@ -46,8 +46,8 @@ public class RRTeleOp extends OpMode {
        }
 
        if (controlState == ControlStates.DRIVER_CONTROL) {
-           currentDrivebaseAction.cancelAbruptly();
-           runningActions.add(new InstantAction(() -> driveSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)));
+           if (currentDrivebaseAction != null) {currentDrivebaseAction.cancelAbruptly();}
+           runningActions.add(new InstantAction(() -> driveSubsystem.drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)));
        } else if (currentDrivebaseAction == null) {
            currentDrivebaseAction = driveSubsystem.toBasket();
        }
