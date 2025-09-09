@@ -17,7 +17,7 @@ public class ClassicTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        double drive = gamepad1.left_stick_y;
+        double drive = -gamepad1.left_stick_y;
         double strafe = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x;
 
@@ -26,6 +26,7 @@ public class ClassicTeleOp extends OpMode {
 
          mecanumDriveSubsystem.drive(drive, strafe, turn);
          mecanumDriveSubsystem.periodic();
+         telemetry.update();
 
          if (gamepad1.options) {
              mecanumDriveSubsystem.resetImu();

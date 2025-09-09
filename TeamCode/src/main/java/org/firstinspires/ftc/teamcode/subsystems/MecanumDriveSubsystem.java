@@ -68,6 +68,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
+        imu.resetYaw();
         isFieldCentric = true;
     }
 
@@ -78,6 +79,9 @@ public class MecanumDriveSubsystem extends SubsystemBase {
             // Rotate the movement direction counter to the bot's rotation
             double rotX = strafe * Math.cos(-botHeading) - drive * Math.sin(-botHeading);
             double rotY = strafe * Math.sin(-botHeading) + drive * Math.cos(-botHeading);
+
+            opMode.telemetry.addData("x", rotX);
+            opMode.telemetry.addData("y", rotY);
 
             if (!IS_USING_RR) {
                 double frontLeftPower  = Range.clip(rotY + rotX + turn, -1, 1);
@@ -139,7 +143,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
    @Override
    public void periodic() {
-       opMode.telemetry.addData("heading", getHeading());
+       opMode.telemetry.addData("heading", Math.toDegrees(getHeading()));
        opMode.telemetry.addData("is fieldCentric", isFieldCentric);
        if (IS_USING_RR) {
            mecanumDrive.updatePoseEstimate();
