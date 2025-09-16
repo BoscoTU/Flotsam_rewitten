@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp(name = "Test Motor Control", group = "Examples")
 public class FlyWheel extends LinearOpMode {
-
+//http://192.168.43.1:8080/?page=connection.html&pop=true
     @Override
     public void runOpMode() {
         DcMotorEx testMotor = hardwareMap.get(DcMotorEx.class, "test");
