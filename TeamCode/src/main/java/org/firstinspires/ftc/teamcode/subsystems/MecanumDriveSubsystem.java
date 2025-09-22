@@ -89,14 +89,14 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                 double rearLeftPower   = Range.clip(rotY - rotX + turn, -1, 1);
                 double rearRightPower  = Range.clip(rotY + rotX - turn, -1, 1);
 
-                frontLeftMotor.setPower(frontLeftPower);
-                frontRightMotor.setPower(frontRightPower);
-                rearLeftMotor.setPower(rearLeftPower);
-                rearRightMotor.setPower(rearRightPower);
+                frontLeftMotor.setPower(frontLeftPower * speedMultiplier);
+                frontRightMotor.setPower(frontRightPower * speedMultiplier);
+                rearLeftMotor.setPower(rearLeftPower * speedMultiplier);
+                rearRightMotor.setPower(rearRightPower * speedMultiplier);
            } else {
                mecanumDrive.setDrivePowers(
                        new PoseVelocity2d(
-                               new Vector2d(rotX, rotY), turn
+                               new Vector2d(rotX * speedMultiplier, rotY * speedMultiplier), turn * speedMultiplier
                        ));
            }
 
@@ -107,14 +107,14 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                 double rearLeftPower   = Range.clip(drive - strafe + turn, -1, 1);
                 double rearRightPower  = Range.clip(drive + strafe - turn, -1, 1);
 
-                frontLeftMotor.setPower(frontLeftPower);
-                frontRightMotor.setPower(frontRightPower);
-                rearLeftMotor.setPower(rearLeftPower);
-                rearRightMotor.setPower(rearRightPower);
+                frontLeftMotor.setPower(frontLeftPower * speedMultiplier);
+                frontRightMotor.setPower(frontRightPower * speedMultiplier);
+                rearLeftMotor.setPower(rearLeftPower * speedMultiplier);
+                rearRightMotor.setPower(rearRightPower * speedMultiplier);
            } else {
                mecanumDrive.setDrivePowers(
                        new PoseVelocity2d(
-                               new Vector2d(strafe, drive), turn
+                               new Vector2d(strafe * speedMultiplier, drive * speedMultiplier), turn * speedMultiplier
                        ));
             }
         }
