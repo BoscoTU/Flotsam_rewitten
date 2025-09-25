@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -16,7 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.LimelightSubsystem;
-@TeleOp(name = "Test:2d Back & forth Auto", group = "zoidProgram")
+@TeleOp(name = "8shape Auto", group = "zoidProgram")
 public class TwoDBackAndForthAuto extends LinearOpMode {
     private MecanumDrive mecanumDrive;
     private LimelightSubsystem limelightSubsystem;
@@ -24,7 +25,7 @@ public class TwoDBackAndForthAuto extends LinearOpMode {
     public void runOpMode()  {
         Pose2d beginPose = new Pose2d(0,48 , Math.toRadians(0));
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
-        this.limelightSubsystem = new LimelightSubsystem(this);
+//        this.limelightSubsystem = new LimelightSubsystem(this);
 
         waitForStart();
 
@@ -44,7 +45,8 @@ public class TwoDBackAndForthAuto extends LinearOpMode {
                     .build());
 
                     while(!gamepad1.a) {
-                        getRobotPose();
+                        mecanumDrive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0),0));
+//                        getRobotPose();
                     }
         }
 
