@@ -74,8 +74,8 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // drive model parameters
-        public double inPerTick = 1.0;
-//        public double inPerTick = 0.00106;
+//        public double inPerTick = 1.0;
+        public double inPerTick = 0.00106;
         public double lateralInPerTick = inPerTick;
         public double trackWidthTicks = 11544;
 
@@ -245,16 +245,16 @@ public final class MecanumDrive {
         rightFront = hardwareMap.get(DcMotorEx.class, this.PARAMS.FRONT_RIGHT_MOTOR_NAME);
 
         //TODO: change this to brake
-//        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT
-        );
+//        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT
+//        );
 
         // : reverse motor directions if needed
         leftFront.setDirection(this.PARAMS.FRONT_LEFT_MOTOR_DRIECTION);
@@ -270,6 +270,8 @@ public final class MecanumDrive {
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
 //      TODO: set localizer!
+//        localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, pose);
+
         localizer = new OTOSLocalizer(hardwareMap, pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
