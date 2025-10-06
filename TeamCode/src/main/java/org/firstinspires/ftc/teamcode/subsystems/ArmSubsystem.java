@@ -177,7 +177,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
+            return true;
         }
     }
 

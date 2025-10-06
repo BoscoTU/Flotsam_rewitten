@@ -47,8 +47,6 @@ public class FlyWheel extends LinearOpMode {
             telemetry.addData("Velocity (ticks/s)", "%.2f", velocityTicksPerSec);
             telemetry.addData("Velocity (RPM)", "%.2f", rpm);
             telemetry.update();
-
-            sleep(100); // small delay to avoid spamming
         }
     }
 }
