@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.Range;
 
+@Config
 public class FlywheelSubsystem extends SubsystemBase {
     private OpMode opMode;
 
@@ -28,15 +29,16 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final PIDFCoefficients FLYWHEEL_PIDF_SETTING = new PIDFCoefficients(200, 0, 0, 0);
 
     //custom PID + feedforward
-    private final double TOLERANCE = 28;
-    private final double kS = -1;
-    private final double kV = -1;
-    private final double kA = -1;
+    public static class Params {
+        public static final double TOLERANCE = 28;
+        public static final double kS = -1;
+        public static final double kV = -1;
+        public static final double kA = -1;
 
-    private final double P = -1;
-    private final double I = -1;
-    private final double D = -1;
-
+        public static final double P = -1;
+        public static final double I = -1;
+        public static final double D = -1;
+    }
 
     private PIDController flyWheelController;
     private double maxFlywheelPower = 1.0;
@@ -46,7 +48,8 @@ public class FlywheelSubsystem extends SubsystemBase {
         this.opMode = opMode;
         flywheelMotor = opMode.hardwareMap.get(DcMotorEx.class, FLYWHEEL_MOTOR_NAME);
         flywheelMotor.setDirection(FLYWHEEL_DIRECTION);
-        flywheelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flywheelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flyWheelController = new PIDController(Params.P, Params.I, Params.D);
     }
 
     public void runWithDefaultPID(double rpm){
@@ -64,7 +67,7 @@ public class FlywheelSubsystem extends SubsystemBase {
         return rpm * TICKS_PER_ROTATION / 60;
     }
 
-    public double getFlywheelVelocity() {
+    public double getFlywheelRPM() {
         return flywheelMotor.getVelocity() / TICKS_PER_ROTATION * 60;
     }
 
@@ -77,7 +80,14 @@ public class FlywheelSubsystem extends SubsystemBase {
         targetVelocity = rpmToTps(rpm);
     }
 
-    public double flywheelCustomPID() {
+    public void setFlywheelMotorPower(double power) {
+        if (flywheelMotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            flywheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        flywheelMotor.setPower(power);
+    }
+
+    public double flywheelCustomPID(double targetVelocity) {
         if (flywheelMotor.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
             flywheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -85,17 +95,16 @@ public class FlywheelSubsystem extends SubsystemBase {
         return pid;
     }
 
-    public double flywheelFeedForward() {
-        double targetTPS = targetVelocity;
-        double targetlRadPS = targetTPS / TICKS_PER_ROTATION * Math.toRadians(360);
-        double feedForward = kS * Math.signum(targetlRadPS) + kV * targetlRadPS;
+    public double flywheelFeedForward(double targetVelocity) {
+        double targetRadPS = targetVelocity / TICKS_PER_ROTATION * Math.toRadians(360);
+        double feedForward = Params.kS * Math.signum(targetRadPS) + Params.kV * targetRadPS;
 
         return feedForward;
     }
 
     private void runFlywheelControl() {
-        double feedforward = flywheelFeedForward();
-        double pid = flywheelCustomPID();
+        double feedforward = flywheelFeedForward(targetVelocity);
+        double pid = flywheelCustomPID(targetVelocity);
 
         flywheelMotor.setPower(feedforward + pid);
     }
