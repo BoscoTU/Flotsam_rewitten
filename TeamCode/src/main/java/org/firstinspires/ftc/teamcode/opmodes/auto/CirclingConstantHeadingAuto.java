@@ -22,31 +22,42 @@ public class CirclingConstantHeadingAuto extends LinearOpMode {
     private MecanumDrive mecanumDrive;
     @Override
     public void runOpMode()  {
-        Pose2d beginPose = new Pose2d( 0, 35, Math.toRadians(90));
+        Pose2d beginPose = new Pose2d( 0, 48, Math.toRadians(90));
         this.mecanumDrive = new MecanumDrive(hardwareMap, beginPose);
 
         waitForStart();
 
         Actions.runBlocking(
-                mecanumDrive.actionBuilder(new Pose2d(0, 48, Math.toRadians(90)))
-                        .strafeToConstantHeading(new Vector2d(0, 54))
+                mecanumDrive.actionBuilder(beginPose)
+                        .strafeToConstantHeading(new Vector2d(0, 58))
                         .setTangent(Math.toRadians(180))
-                        .splineToConstantHeading(new Vector2d(-7.5, 48), Math.toRadians(270))
-                        .splineToConstantHeading(new Vector2d(0, 42), Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(7.5, 48), Math.toRadians(90))
-                        .splineToConstantHeading(new Vector2d(0, 54), Math.toRadians(180))
 
-                        .splineToConstantHeading(new Vector2d(-7.5, 48), Math.toRadians(270))
-                        .splineToConstantHeading(new Vector2d(0, 42), Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(7.5, 48), Math.toRadians(90))
-                        .splineToConstantHeading(new Vector2d(0, 54), Math.toRadians(180))
+                        .splineToConstantHeading(new Vector2d(-10, 48), Math.toRadians(270))
+                        .splineToConstantHeading(new Vector2d(0, 38), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(10, 48), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(0, 58), Math.toRadians(180))
 
-                        .splineToConstantHeading(new Vector2d(-7.5, 48), Math.toRadians(270))
-                        .splineToConstantHeading(new Vector2d(0, 42), Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(7.5, 48), Math.toRadians(90))
-                        .splineToConstantHeading(new Vector2d(0, 54), Math.toRadians(180))
+                        .splineToConstantHeading(new Vector2d(-10, 48), Math.toRadians(270))
+                        .splineToConstantHeading(new Vector2d(0, 38), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(10, 48), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(0, 58), Math.toRadians(180))
 
-                        .strafeToConstantHeading(new Vector2d(0, 54))
+                        .splineToConstantHeading(new Vector2d(-10, 48), Math.toRadians(270))
+                        .splineToConstantHeading(new Vector2d(0, 38), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(10, 48), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(0, 58), Math.toRadians(180))
+
+                        .splineToConstantHeading(new Vector2d(-10, 48), Math.toRadians(270))
+                        .splineToConstantHeading(new Vector2d(0, 38), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(10, 48), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(0, 58), Math.toRadians(180))
+
+                        .splineToConstantHeading(new Vector2d(-10, 48), Math.toRadians(270))
+                        .splineToConstantHeading(new Vector2d(0, 38), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(10, 48), Math.toRadians(90))
+                        .splineToConstantHeading(new Vector2d(0, 58), Math.toRadians(180))
+
+                        .strafeToSplineHeading(new Vector2d(0, 48), Math.toRadians(90))
                         .build());
     }
 }
