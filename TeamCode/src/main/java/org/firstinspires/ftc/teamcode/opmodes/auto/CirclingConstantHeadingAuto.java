@@ -29,6 +29,7 @@ public class CirclingConstantHeadingAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 mecanumDrive.actionBuilder(beginPose)
+                        .stopAndAdd(new SleepAction(5))
                         .strafeToConstantHeading(new Vector2d(0, 58))
                         .setTangent(Math.toRadians(180))
 

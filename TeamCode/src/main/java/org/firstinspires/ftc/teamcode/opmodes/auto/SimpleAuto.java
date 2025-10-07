@@ -7,22 +7,21 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
 @Autonomous(name = "SimpleAuto", group = "Scoring Auto")
 public class SimpleAuto extends LinearOpMode {
 
-    MecanumDriveSubsystem mecanumDriveSubsystem;
-
+    MecanumDrive mecanumDrive;
     @Override
     public void runOpMode()  {
 
-        mecanumDriveSubsystem = new MecanumDriveSubsystem(this, true);
-
+        mecanumDrive = new MecanumDrive(this.hardwareMap, new Pose2d(0,0,0));
         waitForStart();
 
-        TrajectoryActionBuilder outtakePos1 = mecanumDriveSubsystem.mecanumDrive.actionBuilder(new Pose2d( 0,0,0))
-                        .strafeToConstantHeading(new Vector2d(10, 10));
+        TrajectoryActionBuilder outtakePos1 = mecanumDrive.actionBuilder(new Pose2d( 0,0,0))
+                        .strafeToLinearHeading(new Vector2d(10,0), Math.toRadians(180));
 
         Actions.runBlocking(
                 outtakePos1.build()
