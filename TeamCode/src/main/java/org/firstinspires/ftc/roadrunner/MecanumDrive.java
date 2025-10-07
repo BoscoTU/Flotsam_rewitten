@@ -74,20 +74,20 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // drive model parameters
-        public double inPerTick = 1.0;
+//        public double inPerTick = 1.0;
 //        TODO:three dead wheel localizer
-//        public double inPerTick = 0.00106;
+        public double inPerTick = 0.00106;
         public double lateralInPerTick = inPerTick;
         public double trackWidthTicks = 11544;
 
         // feedforward parameters (in tick units)
-        public  double kS = 0.01;
-//        public double kS = 0.39;
+//        public  double kS = 0.01;
+        public double kS = 0.39;
 //        TODO: three dead wheel localizer
-//        public double kV = 0.00021;
-        public double kV = 0.25;
-        public double kA = 0.01;
-//        public double kA = 0.00002;
+        public double kV = 0.00021;
+//        public double kV = 0.25;
+//        public double kA = 0.01;
+        public double kA = 0.00002;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
@@ -100,21 +100,21 @@ public final class MecanumDrive {
 
         // path controller gains
 //        TODO: three dead wheel localizer
-//        public double axialGain = 0.55;
-//        public double lateralGain = 3.0935;
-//        public double headingGain = 10.0; // shared with turn
+        public double axialGain = 0.55;
+        public double lateralGain = 3.0935;
+        public double headingGain = 10.0; // shared with turn
+
+        public double axialVelGain = 0.1;
+        public double lateralVelGain = 0.1;
+        public double headingVelGain = 1; // shared with turn
 //
-//        public double axialVelGain = 0.1;
-//        public double lateralVelGain = 0.1;
-//        public double headingVelGain = 1; // shared with turn
-
-        public double axialGain = 5;
-        public double lateralGain = 5;
-        public double headingGain = 0.012; // shared with turn
-
-        public double axialVelGain = 0.5;
-        public double lateralVelGain = 1;
-        public double headingVelGain = 0.001; // shared with turn
+//        public double axialGain = 5;
+//        public double lateralGain = 5;
+//        public double headingGain = 0.012; // shared with turn
+//
+//        public double axialVelGain = 0.5;
+//        public double lateralVelGain = 1;
+//        public double headingVelGain = 0.001; // shared with turn
     }
 
     public static Params PARAMS = new Params();
@@ -284,9 +284,9 @@ public final class MecanumDrive {
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
 //      TODO: set localizer!
-//        localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, pose);
+        localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick, pose);
 
-        localizer = new OTOSLocalizer(hardwareMap, pose);
+//        localizer = new OTOSLocalizer(hardwareMap, pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
