@@ -21,7 +21,7 @@ public class SimpleAuto extends LinearOpMode {
         waitForStart();
 
         TrajectoryActionBuilder outtakePos1 = mecanumDrive.actionBuilder(new Pose2d( 0,0,0))
-                        .strafeToLinearHeading(new Vector2d(10,0), Math.toRadians(180));
+                        .turnTo(90);
 
         Actions.runBlocking(
                 outtakePos1.build()

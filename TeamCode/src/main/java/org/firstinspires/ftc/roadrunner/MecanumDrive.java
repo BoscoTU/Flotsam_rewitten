@@ -78,7 +78,7 @@ public final class MecanumDrive {
 //        TODO:three dead wheel localizer
 //        public double inPerTick = 0.00106;
         public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 11544;
+        public double trackWidthTicks = 9.3;
 
         // feedforward parameters (in tick units)
         public  double kS = 0.01;
