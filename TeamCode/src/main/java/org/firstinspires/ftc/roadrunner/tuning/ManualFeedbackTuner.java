@@ -12,6 +12,7 @@ import org.firstinspires.ftc.roadrunner.TwoDeadWheelLocalizer;
 
 public final class ManualFeedbackTuner extends LinearOpMode {
     public static double DISTANCE = 64;
+    public static double HEADING = 90;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,7 +33,7 @@ public final class ManualFeedbackTuner extends LinearOpMode {
             while (opModeIsActive()) {
                 Actions.runBlocking(
                     drive.actionBuilder(new Pose2d(0, 0, 0))
-                            .strafeToSplineHeading(new Vector2d(DISTANCE, DISTANCE), Math.toRadians(180))
+                            .strafeToSplineHeading(new Vector2d(DISTANCE, DISTANCE), Math.toRadians(HEADING))
 //                            .lineToX(DISTANCE)
 //                            .lineToX(0)
                             .strafeTo(new Vector2d(0, 0))
