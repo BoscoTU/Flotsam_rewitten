@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.FlywheelSubsystem;
-
+@TeleOp
 public class FlywheelFeedForwardTuner extends OpMode {
     private FlywheelSubsystem flywheelSubsystem;
     private enum MotionProfilingStates{
@@ -31,6 +34,8 @@ public class FlywheelFeedForwardTuner extends OpMode {
         flywheelSubsystem = new FlywheelSubsystem(this);
         timer = new ElapsedTime();
         state = MotionProfilingStates.ACCLEARATING;
+        telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+
     }
 
     @Override
@@ -38,11 +43,8 @@ public class FlywheelFeedForwardTuner extends OpMode {
         double targetRPM = motionProfiling();
         flywheelSubsystem.setFlywheelMotorPower(flywheelSubsystem.flywheelFeedForward(targetRPM));
         telemetry.addData("targetRPM", targetRPM);
+        telemetry.addData("currentRPM", flywheelSubsystem.getFlywheelRPM());
         telemetry.update();
-
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("targetRPM", targetRPM);
-        packet.put("flywheelRPM", flywheelSubsystem.getFlywheelRPM());
     }
 
     private double motionProfiling() {
@@ -69,6 +71,8 @@ public class FlywheelFeedForwardTuner extends OpMode {
             targetRPM = MotionProfilingStates.CONSTANT.getTargetRPM() + (timer.seconds() / 5.0) * (MotionProfilingStates.ACCLEARATING.getTargetRPM() - MotionProfilingStates.CONSTANT.getTargetRPM());
         } else if (state == MotionProfilingStates.DECELLERATING) {
             targetRPM = MotionProfilingStates.ACCLEARATING.getTargetRPM() - (timer.seconds() / 5.0) * (MotionProfilingStates.ACCLEARATING.getTargetRPM() - MotionProfilingStates.CONSTANT.getTargetRPM());
+        } else if (state == MotionProfilingStates.CONSTANT && pastState == MotionProfilingStates.ACCLEARATING){
+            targetRPM = MotionProfilingStates.ACCLEARATING.getTargetRPM();
         } else {
             targetRPM = MotionProfilingStates.CONSTANT.getTargetRPM();
         }

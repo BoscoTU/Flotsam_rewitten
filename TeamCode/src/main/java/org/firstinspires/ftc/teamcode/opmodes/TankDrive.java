@@ -63,11 +63,13 @@
 // }
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TankDriveSubsystem;
+@Disabled
 
 @TeleOp(name="TankDrive TeleOp", group="zoidProgram")
 public class TankDrive extends OpMode {

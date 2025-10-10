@@ -16,6 +16,17 @@ import com.qualcomm.robotcore.util.Range;
 
 @Config
 public class FlywheelSubsystem extends SubsystemBase {
+    public static class Params {
+        public double TOLERANCE = 28;
+        public double kS = -1;
+        public double kV = -1;
+        public double kA = -1;
+
+        public double P = -1;
+        public double I = -1;
+        public double D = -1;
+    }
+    public static Params PARAMS = new Params();
     private OpMode opMode;
 
     private DcMotorEx flywheelMotor;
@@ -29,17 +40,6 @@ public class FlywheelSubsystem extends SubsystemBase {
     private final PIDFCoefficients FLYWHEEL_PIDF_SETTING = new PIDFCoefficients(200, 0, 0, 0);
 
     //custom PID + feedforward
-    public static class Params {
-        public static final double TOLERANCE = 28;
-        public static final double kS = -1;
-        public static final double kV = -1;
-        public static final double kA = -1;
-
-        public static final double P = -1;
-        public static final double I = -1;
-        public static final double D = -1;
-    }
-
     private PIDController flyWheelController;
     private double maxFlywheelPower = 1.0;
 
@@ -49,7 +49,7 @@ public class FlywheelSubsystem extends SubsystemBase {
         flywheelMotor = opMode.hardwareMap.get(DcMotorEx.class, FLYWHEEL_MOTOR_NAME);
         flywheelMotor.setDirection(FLYWHEEL_DIRECTION);
         flywheelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        flyWheelController = new PIDController(Params.P, Params.I, Params.D);
+        flyWheelController = new PIDController(PARAMS.P, PARAMS.I, PARAMS.D);
     }
 
     public void runWithDefaultPID(double rpm){
@@ -97,7 +97,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 
     public double flywheelFeedForward(double targetVelocity) {
         double targetRadPS = targetVelocity / TICKS_PER_ROTATION * Math.toRadians(360);
-        double feedForward = Params.kS * Math.signum(targetRadPS) + Params.kV * targetRadPS;
+        double feedForward = PARAMS.kS * Math.signum(targetRadPS) + PARAMS.kV * targetRadPS;
 
         return feedForward;
     }

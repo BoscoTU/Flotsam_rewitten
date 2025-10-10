@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.arcrobotics.ftclib.command.button.Trigger;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
+@Disabled
 
 @TeleOp(name="TeleOp", group="zoidProgram")
 public class ClassicTeleOp extends OpMode {
